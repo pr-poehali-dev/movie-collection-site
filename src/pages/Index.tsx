@@ -1,15 +1,19 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 
 const Index = () => {
-  const movies = [
+  const [selectedGenre, setSelectedGenre] = useState("Все");
+  const [selectedYear, setSelectedYear] = useState("Все");
+
+  const allMovies = [
     {
       id: 1,
       title: "Gibota",
       year: "2024",
-      genre: "Sci-Fi Thriller",
+      genre: "Sci-Fi",
       rating: 8.7,
       image: "/img/35742cb4-64a6-46fc-959c-a3b84cc3600c.jpg",
       description: "Футуристический триллер о борьбе за выживание в мире высоких технологий",
@@ -34,8 +38,69 @@ const Index = () => {
       image: "/img/55b4572c-f17f-46d0-a8e5-dc999ca101be.jpg",
       description: "Глубокая драма о поисках смысла жизни и человеческих отношениях",
       trailer: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      id: 4,
+      title: "Cosmic Odyssey",
+      year: "2023",
+      genre: "Sci-Fi",
+      rating: 8.2,
+      image: "/img/35742cb4-64a6-46fc-959c-a3b84cc3600c.jpg",
+      description: "Эпическое путешествие по галактике в поисках новой родины",
+      trailer: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      id: 5,
+      title: "Urban Justice",
+      year: "2023",
+      genre: "Action",
+      rating: 7.6,
+      image: "/img/8d7ddd2b-03a0-4a34-89c3-9cc39714fffd.jpg",
+      description: "Боевик о борьбе за справедливость в криминальном городе",
+      trailer: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      id: 6,
+      title: "Silent Hearts",
+      year: "2022",
+      genre: "Drama",
+      rating: 8.9,
+      image: "/img/55b4572c-f17f-46d0-a8e5-dc999ca101be.jpg",
+      description: "Трогательная история о любви и потерях во время войны",
+      trailer: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      id: 7,
+      title: "Nightmare Valley",
+      year: "2022",
+      genre: "Horror",
+      rating: 7.4,
+      image: "/img/35742cb4-64a6-46fc-959c-a3b84cc3600c.jpg",
+      description: "Психологический хоррор о темных секретах маленького городка",
+      trailer: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    {
+      id: 8,
+      title: "Love Actually Happens",
+      year: "2021",
+      genre: "Romance",
+      rating: 8.1,
+      image: "/img/55b4572c-f17f-46d0-a8e5-dc999ca101be.jpg",
+      description: "Романтическая комедия о неожиданных встречах и судьбе",
+      trailer: "https://www.youtube.com/embed/dQw4w9WgXcQ"
     }
   ];
+
+  const genres = ["Все", "Action", "Drama", "Sci-Fi", "Horror", "Romance"];
+  const years = ["Все", "2024", "2023", "2022", "2021"];
+
+  const filteredMovies = allMovies.filter(movie => {
+    const genreMatch = selectedGenre === "Все" || movie.genre === selectedGenre;
+    const yearMatch = selectedYear === "Все" || movie.year === selectedYear;
+    return genreMatch && yearMatch;
+  });
+
+  const movies = filteredMovies;
 
   const collections = [
     { title: "Лучшие фильмы года", count: 25, icon: "Trophy" },
@@ -113,9 +178,58 @@ const Index = () => {
       {/* Popular Movies */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold mb-12 text-center" style={{ fontFamily: 'Bebas Neue' }}>
+          <h2 className="text-4xl font-bold mb-8 text-center" style={{ fontFamily: 'Bebas Neue' }}>
             Популярные фильмы
           </h2>
+          
+          {/* Filters */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <div className="flex flex-wrap gap-2">
+              <span className="text-[#B8860B] font-semibold mr-2">Жанр:</span>
+              {genres.map((genre) => (
+                <Button
+                  key={genre}
+                  variant={selectedGenre === genre ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedGenre(genre)}
+                  className={`${
+                    selectedGenre === genre
+                      ? "bg-[#B8860B] text-black hover:bg-[#B8860B]/80"
+                      : "border-[#B8860B]/50 text-[#B8860B] hover:bg-[#B8860B]/10"
+                  } transition-all duration-300 hover-scale`}
+                >
+                  {genre}
+                </Button>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-[#B8860B] font-semibold mr-2">Год:</span>
+              {years.map((year) => (
+                <Button
+                  key={year}
+                  variant={selectedYear === year ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedYear(year)}
+                  className={`${
+                    selectedYear === year
+                      ? "bg-[#B8860B] text-black hover:bg-[#B8860B]/80"
+                      : "border-[#B8860B]/50 text-[#B8860B] hover:bg-[#B8860B]/10"
+                  } transition-all duration-300 hover-scale`}
+                >
+                  {year}
+                </Button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Results count */}
+          <div className="text-center mb-6">
+            <p className="text-gray-400">
+              Найдено {movies.length} {movies.length === 1 ? 'фильм' : movies.length < 5 ? 'фильма' : 'фильмов'}
+              {selectedGenre !== "Все" && ` в жанре "${selectedGenre}"`}
+              {selectedYear !== "Все" && ` за ${selectedYear} год`}
+            </p>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {movies.map((movie) => (
               <Card key={movie.id} className="bg-[#2A2A2A] border-[#B8860B]/20 hover:border-[#B8860B] transition-all duration-300 hover-scale group">
